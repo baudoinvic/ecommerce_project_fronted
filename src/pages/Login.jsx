@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { login } from "../redux/apiCalls";
 import { mobile } from "../responsive";
@@ -67,18 +67,25 @@ const Link = styled.a`
 
 
 
-const Login = () => {
+const Login = ({user}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  // const { isFetching, error } = useSelector((state) => state.user);
+   const { isFetching, currentUser, isLoggedIn } = useSelector((state) => state.user);
+
+   console.log(isLoggedIn, "Login Status")
+
+   useEffect(()=>{
+    if (isLoggedIn) {
+      navigate("/home")
+    }
+   },[isLoggedIn])
+
 
   const handleClick = (e) => {
     e.preventDefault();
-    login(dispatch, { username, password });
+    dispatch(login({ username, password }));
   };
-
-  console.log(useSelector ,handleClick)
 
   const navigate = useNavigate();
   return (
@@ -95,7 +102,7 @@ const Login = () => {
             type="password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button onClick={()=>navigate("/home")}>
+          <Button onClick={(e)=>handleClick(e)}>
             LOGIN
           </Button>
        

@@ -3,9 +3,10 @@
  import  { useState } from "react";
  import styled from "styled-components";
  import { mobile } from "../responsive";
- import { useSelector } from "react-redux";
+ import { useSelector, useDispatch } from "react-redux";
  import { Link } from "react-router-dom";
  import {useNavigate} from "react-router-dom";
+ import { logout } from "../redux/userRedux";
 
 
  const Container = styled.div`
@@ -50,10 +51,15 @@
    flex: 1;
    text-align: center;
  `;
+      
+     
 
  const Logo = styled.h1`
    font-weight: bold;
    ${mobile({ fontSize: "24px" })}
+   @media screen and (max-width: 768px) {
+    font-size: 24px;
+  }
 `;
  const Right = styled.div`
    flex: 1;
@@ -70,11 +76,13 @@
    ${mobile({ fontSize: "12px", marginLeft: "10px" })}
  `;
 
+     
  
 const Navbar = () => {
   const quantity = useSelector((state) => state.cart.quantity);
   
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
    console.log(useState)
  
@@ -92,8 +100,7 @@ const Navbar = () => {
           <Logo>Buy with me.</Logo>
          </Center>
         <Right>
-           <MenuItem onClick={()=>navigate("/Register")}>REGISTER</MenuItem> 
-            <MenuItem onClick={()=>navigate("/Login")}>SIGN IN</MenuItem> 
+           <MenuItem onClick={()=>{dispatch(logout());navigate("/")}}>LOGOUT</MenuItem>
           
           <Link to="/cart">
            <MenuItem>

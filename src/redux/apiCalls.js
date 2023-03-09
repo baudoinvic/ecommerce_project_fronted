@@ -16,15 +16,30 @@ import {
   addProductSuccess,
 } from "./productRedux";
 
-export const login = async (dispatch, user) => {
-  dispatch(loginStart());
+export const login = (user) => async (dispatch) => {
+  console.log(user)
   try {
+  dispatch(loginStart());
     const res = await publicRequest.post("/auth/login", user);
     dispatch(loginSucess(res.data));
   } catch (err) {
+    console.log(err)
     dispatch(loginFailure());
   }
 };
+
+export const register =  (data) => async(dispatch) => {
+  try { 
+  console.log(data)
+  dispatch(loginStart())
+    const res = await publicRequest.post("/auth/register", data);
+    console.log(res,"Response")
+    dispatch(loginSucess(res.data))
+  } catch (error) {
+    console.log(error)
+    dispatch(loginFailure());
+  }
+}
 
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());

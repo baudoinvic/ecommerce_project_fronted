@@ -175,7 +175,6 @@ const Cart = () => {
 
   useEffect(() => {
 
-     
     const makeRequest = async () => {
       try {
         const res = await userRequest.post("/checkout/payment", {
@@ -189,6 +188,7 @@ const Cart = () => {
        navigate({pathname:"/success"});
       } catch {}
     };
+    
     stripeToken && makeRequest();
   }, [stripeToken, cart, cart.total, navigate]);
    
@@ -273,7 +273,7 @@ const Cart = () => {
               billingAddress
               shippingAddress
               description={`Your total is $${cart.total}`}
-              amount={cart.total * 100}
+               amount={cart.total * 100}
               token={onToken}
               stripeKey={KEY}
             >

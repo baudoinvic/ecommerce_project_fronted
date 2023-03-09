@@ -6,7 +6,8 @@ const cartSlice = createSlice({
     products: [],
     quantity: 0,
     total: 0,
-    stripeData: {}
+    stripeData: {},
+    transactions: []
   },
   reducers: {
     addProduct: (state, action) => {
@@ -24,10 +25,12 @@ const cartSlice = createSlice({
         state.total -= removedProduct.price * removedProduct.quantity;
         state.products = state.products.filter((product) => product._id !== action.payload);
       }
+    },
+    addTransaction: (state, action) => {
+      state.transactions.push(action.payload);
     }
   },
-  
 });
 
-export const { addProduct, removeProduct, storeStripeData } = cartSlice.actions;
+export const { addProduct, removeProduct, storeStripeData, addTransaction } = cartSlice.actions;
 export default cartSlice.reducer;

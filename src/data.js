@@ -43,11 +43,11 @@ export const sliderItems = [
     },
   ];
 
+
   export const popularProducts = [
     {
       id:1,
       img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmIE4toYEoYdMKQsmHCcxxHf2Wy2wFPk1-ZQ&usqp=CAU",
-       
     },
     {
       id:2,
