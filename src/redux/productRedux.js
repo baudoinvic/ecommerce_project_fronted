@@ -6,6 +6,7 @@ export const productSlice = createSlice({
     products: [],
     isFetching: false,
     error: false,
+    searchKeyword: "",
   },
   reducers: {
     //GET ALL
@@ -65,6 +66,13 @@ export const productSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    changeSearchKeyword: (state, action) => {
+      console.log(action.payload);
+      state.searchKeyword = action.payload;
+    },
+    clearSearchKeyword: (state) => {
+      state.searchKeyword = "";
+    },
   },
 });
 
@@ -81,6 +89,8 @@ export const {
   addProductStart,
   addProductSuccess,
   addProductFailure,
+  changeSearchKeyword,
+  clearSearchKeyword,
 } = productSlice.actions;
 
 export default productSlice.reducer;

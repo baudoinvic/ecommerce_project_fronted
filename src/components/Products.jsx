@@ -3,6 +3,7 @@ import styled from "styled-components";
 // import { popularProducts } from "../data";
 import Product from "./Product";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   padding: 20px;
@@ -14,6 +15,9 @@ const Container = styled.div`
 const Products = ({ cat, filters, sort }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const searchKeyword = useSelector((state) => state.product.searchKeyword);
+
+  console.log(searchKeyword, "search for products");
 
   useEffect(() => {
     const getProducts = async () => {
@@ -24,7 +28,7 @@ const Products = ({ cat, filters, sort }) => {
             : "http://localhost:5000/api/products"
         );
         setProducts(res.data);
-      } catch (err) {}
+      } catch (err) { }
     };
     getProducts();
   }, [cat]);
@@ -57,13 +61,26 @@ const Products = ({ cat, filters, sort }) => {
   }, [sort]);
 
   return (
-    <Container>
-      {cat
-        ? filteredProducts.map((item) => <Product item={item} key={item.id} />)
-        : products
-            .slice(0, 9)
+    <>
+      <Container>
+        {cat
+          ? filteredProducts.map((item) => <Product item={item} key={item.id} />)
+          : products
             .map((item) => <Product item={item} key={item.id} />)}
-    </Container>
+      </Container>
+
+      {searchKeyword ? <div style={{
+        position: "absolute",
+        top: "90px",
+        left: "0",
+        backgroundColor: "white",
+      }}>
+        <Container>
+          {products.filter((item) => item.title.toLowerCase().includes(searchKeyword.toLowerCase()))
+            .map((item) => <Product item={item} key={item.id} />)}
+        </Container>
+      </div> : null}
+    </>
   );
 };
 

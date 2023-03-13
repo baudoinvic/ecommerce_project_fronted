@@ -14,32 +14,33 @@ import {
   addProductFailure,
   addProductStart,
   addProductSuccess,
+  changeSearchKeyword,
 } from "./productRedux";
 
 export const login = (user) => async (dispatch) => {
-  console.log(user)
+  console.log(user);
   try {
-  dispatch(loginStart());
+    dispatch(loginStart());
     const res = await publicRequest.post("/auth/login", user);
     dispatch(loginSucess(res.data));
   } catch (err) {
-    console.log(err)
+    console.log(err);
     dispatch(loginFailure());
   }
 };
 
-export const register =  (data) => async(dispatch) => {
-  try { 
-  console.log(data)
-  dispatch(loginStart())
+export const register = (data) => async (dispatch) => {
+  try {
+    console.log(data);
+    dispatch(loginStart());
     const res = await publicRequest.post("/auth/register", data);
-    console.log(res,"Response")
-    dispatch(loginSucess(res.data))
+    console.log(res, "Response");
+    dispatch(loginSucess(res.data));
   } catch (error) {
-    console.log(error)
+    console.log(error);
     dispatch(loginFailure());
   }
-}
+};
 
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());
@@ -54,7 +55,6 @@ export const getProducts = async (dispatch) => {
 export const deleteProduct = async (id, dispatch) => {
   dispatch(deleteProductStart());
   try {
-   
     await userRequest.delete(`/products/${id}`);
     dispatch(deleteProductSuccess(id));
 
@@ -82,4 +82,8 @@ export const addProduct = async (product, dispatch) => {
   } catch (err) {
     dispatch(addProductFailure());
   }
+};
+
+export const searchProduct = (keyword) => async (dispatch) => {
+  dispatch(changeSearchKeyword(keyword));
 };
