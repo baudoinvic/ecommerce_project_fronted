@@ -20,13 +20,12 @@ const Wrapper = styled.div`
 
 const ImgContainer = styled.div`
 display: grid;
-background: black;
 grid-template-columns: auto auto auto;
   
 `;
 
 const Image = styled.img`
-  width: 60%;
+  width: 80%;
   height: 40vh;
   object-fit: cover;
   ${mobile({ height: "40vh" })}
@@ -164,6 +163,10 @@ const Product = () => {
         </ImgContainer>
         <InfoContainer>
           <Title>{product.title}</Title>
+           <p>hello this is the best product for you the price it's shown just down<br></br>
+              if you are interested don't hesitate to buy with us we will be always<br></br> 
+              there  for you anytime you will need help we will get with you in touch
+           </p>
           <Desc>{product.desc}</Desc>
           <Price>$ {product.price}</Price>
           <FilterContainer>

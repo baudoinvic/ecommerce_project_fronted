@@ -181,6 +181,7 @@ const Cart = () => {
           tokenId: stripeToken.id,
           amount: cart.total,
         });
+        console.log(res)
         dispatch(storeStripeData({
           stripeData: res.data,
           products: cart }))

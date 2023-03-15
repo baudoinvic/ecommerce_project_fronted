@@ -30,6 +30,7 @@ const FilterText = styled.span`
   margin-right: 20px;
   ${mobile({ marginRight: "0px" })}
 `;
+ 
 
 const Select = styled.select`
   padding: 10px;
@@ -87,6 +88,7 @@ const ProductList = () => {
           </Select>
         </Filter>
       </FilterContainer>
+        <h1 style={{textAlign: 'center'}}>Latest Producs</h1>
       <Products cat={cat} filters={filters} sort={sort} />
       <Newsletter />
       <Footer />
