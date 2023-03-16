@@ -3,8 +3,10 @@ import { userRequest } from "../requestMethods";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import React, { useState, useEffect } from "react";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux"
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux"
+import { loginStart, loginFailure, loginSucess } from "../redux/userRedux";
+import { publicRequest } from "../requestMethods";
 
 import axios from 'axios';
 import { register } from "../redux/apiCalls";
@@ -62,88 +64,99 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-  const Register = () => {
-    const dispatch = useDispatch();
-    const isLoggedIn = useSelector((state)=>state.user.isLoggedIn)
-    console.log(isLoggedIn, "Login Status")
-   const [formFilled, setFormFilled] = useState(false);
-   const [firstName, setFirstName] = useState("")
-   const [lastName, setLastName] = useState("")
-   const [username, setUserName] = useState("")
-   const [email, setEmail] = useState("")
-   const [address, setAddress] = useState("")
-   const [password, setPassword] = useState("")
+const Register = () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
+  const [formFilled, setFormFilled] = useState(false);
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [username, setUserName] = useState("")
+  const [email, setEmail] = useState("")
+  const [address, setAddress] = useState("")
+  const [password, setPassword] = useState("")
+  const [isError, setIsError] = useState(false)
+  console.log(isError, "Error Status")
+  console.log(isLoggedIn, "Login Status")
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-   useEffect(()=>{
+  useEffect(() => {
     if (isLoggedIn == true) {
       navigate("/home")
     }
-   },[isLoggedIn])
+  }, [isLoggedIn])
 
-  const handleCreateAccount = (e) => {
+  const handleCreateAccount = async (e) => {
     e.preventDefault()
-      dispatch(register({
+    setIsError(false)
+    try {
+      dispatch(loginStart());
+      const res = await publicRequest.post("/auth/register", {
         firstname: firstName,
         lastname: lastName,
         username,
         email,
         address,
         password
-      }))
-      //  setFormFilled(true);
-    };
-     const handleGoToLogin = () => {
-              navigate("/Login");
-           };
-           
- 
+      });
+      console.log(res, "Response");
+      dispatch(loginSucess(res.data));
+    } catch (error) {
+      console.log(error);
+      setIsError(true)
+      dispatch(loginFailure());
+    }
+  };
+  const handleGoToLogin = () => {
+    navigate("/Login");
+  };
+
+
 
   return (
     <Container>
       <Wrapper>
 
-      {formFilled ? (
+        {formFilled ? (
           <>
-             <Button onClick={handleGoToLogin}>GO TO LOGIN</Button>
+            <Button onClick={handleGoToLogin}>GO TO LOGIN</Button>
           </>
         ) : (
           <>
-        <Title>CREATE AN ACCOUNT</Title>
-        <Form>
-        <Input placeholder="firstname" onChange={(e)=>{
-          e.preventDefault()
-          setFirstName(e.target.value)
-        }} />
-        <Input placeholder="lastname" onChange={(e)=>{
-          e.preventDefault()
-          setLastName(e.target.value)
-        }}  />
-          <Input placeholder="username" onChange={(e)=>{
-          e.preventDefault()
-          setUserName(e.target.value)
-        }}  />
-          <Input placeholder="email" onChange={(e)=>{
-          e.preventDefault()
-          setEmail(e.target.value)
-        }}  />
-          <Input placeholder="address" onChange={(e)=>{
-          e.preventDefault()
-          setAddress(e.target.value)
-        }}  />
-          <Input placeholder="password"  type="password" onChange={(e)=>{
-          e.preventDefault()
-          setPassword(e.target.value)
-        }} />
-         
-          <Agreement>
-            By creating an account, I consent to the processing of my personal
-            data in accordance with the <b>PRIVACY POLICY</b>
-          </Agreement>
-          <Button onClick={(e)=>handleCreateAccount(e)}>CREATE</Button>
-        </Form>
-        </>
+            <Title>CREATE AN ACCOUNT</Title>
+            <Form>
+              <Input placeholder="firstname" onChange={(e) => {
+                e.preventDefault()
+                setFirstName(e.target.value)
+              }} />
+              <Input placeholder="lastname" onChange={(e) => {
+                e.preventDefault()
+                setLastName(e.target.value)
+              }} />
+              <Input placeholder="username" onChange={(e) => {
+                e.preventDefault()
+                setUserName(e.target.value)
+              }} />
+              <Input placeholder="email" onChange={(e) => {
+                e.preventDefault()
+                setEmail(e.target.value)
+              }} />
+              <Input placeholder="address" onChange={(e) => {
+                e.preventDefault()
+                setAddress(e.target.value)
+              }} />
+              <Input placeholder="password" type="password" onChange={(e) => {
+                e.preventDefault()
+                setPassword(e.target.value)
+              }} />
+              {isError && <span style={{ color: "red", marginTop: "10px" }}>Registration failed, Please fill all fields</span>}
+              <Agreement>
+                By creating an account, I consent to the processing of my personal
+                data in accordance with the <b>PRIVACY POLICY</b>
+              </Agreement>
+              <Button onClick={(e) => handleCreateAccount(e)}>CREATE</Button>
+            </Form>
+          </>
         )}
       </Wrapper>
     </Container>

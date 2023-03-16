@@ -4,8 +4,9 @@ import Announcement from "../components/Announcement";
 import Products from "../components/Products";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
+import { categories } from "../data";
 import { mobile } from "../responsive";
-import { useLocation } from "react-router";
+import { useParams } from "react-router";
 import { useState } from "react";
 
 const Container = styled.div``;
@@ -30,7 +31,7 @@ const FilterText = styled.span`
   margin-right: 20px;
   ${mobile({ marginRight: "0px" })}
 `;
- 
+
 
 const Select = styled.select`
   padding: 10px;
@@ -40,8 +41,9 @@ const Select = styled.select`
 const Option = styled.option``;
 
 const ProductList = () => {
-  const location = useLocation();
-  const cat = location.pathname.split("/")[6];
+  const params = useParams();
+  const cat = params.category;
+  console.log(cat)
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState("newest");
 
@@ -57,7 +59,7 @@ const ProductList = () => {
     <Container>
       <Navbar />
       <Announcement />
-      <Title>{cat}</Title>
+      <Title>{categories.filter((item => item.cat == cat))[0]?.title}</Title>
       <FilterContainer>
         <Filter>
           <FilterText>Filter Products:</FilterText>
@@ -88,7 +90,7 @@ const ProductList = () => {
           </Select>
         </Filter>
       </FilterContainer>
-        <h1 style={{textAlign: 'center'}}>Latest Producs</h1>
+      {/* <h1 style={{ textAlign: 'center' }}>Latest Producs</h1> */}
       <Products cat={cat} filters={filters} sort={sort} />
       <Newsletter />
       <Footer />

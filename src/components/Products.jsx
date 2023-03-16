@@ -17,15 +17,14 @@ const Products = ({ cat, filters, sort }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const searchKeyword = useSelector((state) => state.product.searchKeyword);
 
-  console.log(searchKeyword, "search for products");
+  console.log(cat, "search for products");
+  console.log(products, "products");
 
   useEffect(() => {
     const getProducts = async () => {
       try {
         const res = await axios.get(
-          cat
-            ? `http://localhost:5000/api/products?category=${cat}`
-            : "http://localhost:5000/api/products"
+          "http://localhost:5000/api/products"
         );
         setProducts(res.data);
       } catch (err) { }
@@ -36,11 +35,7 @@ const Products = ({ cat, filters, sort }) => {
   useEffect(() => {
     cat &&
       setFilteredProducts(
-        products.filter((item) =>
-          Object.entries(filters).every(([key, value]) =>
-            item[key].includes(value)
-          )
-        )
+        products.filter((item) => item.category === cat)
       );
   }, [products, cat, filters]);
 
@@ -62,6 +57,7 @@ const Products = ({ cat, filters, sort }) => {
 
   return (
     <>
+      {cat && filteredProducts.length === 0 ? <div style={{ textAlign: "center", fontSize: "30px", marginTop: "100px" }}>No products</div> : null}
       <Container>
         {cat
           ? filteredProducts.map((item) => <Product item={item} key={item.id} />)

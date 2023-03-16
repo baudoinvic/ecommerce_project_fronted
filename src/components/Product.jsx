@@ -28,7 +28,7 @@ const Info = styled.div`
 const Container = styled.div`
   flex: 1;
   margin: 5px;
-  min-width: 280px;
+  min-width: 300px;
   height: 350px;
   display: flex;
   align-items: center;
@@ -75,7 +75,9 @@ const Product = ({ item }) => {
   return (
     <Container>
       <Circle />
-      <Image src={item.img} />
+      <Image style={{
+        maxWidth: "100%",
+      }} src={item.img} />
       <Info>
         <p style={{
           color: "white",

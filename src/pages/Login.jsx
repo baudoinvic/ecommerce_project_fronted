@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { login } from "../redux/apiCalls";
+import { publicRequest } from "../requestMethods";
+import { loginStart, loginFailure, loginSucess } from "../redux/userRedux";
 import { mobile } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
@@ -67,24 +69,38 @@ const Link = styled.a`
 
 
 
-const Login = ({user}) => {
+const Login = ({ user }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-   const { isFetching, currentUser, isLoggedIn } = useSelector((state) => state.user);
+  const { isFetching, currentUser, isLoggedIn } = useSelector((state) => state.user);
 
-   console.log(isLoggedIn, "Login Status")
+  console.log(isLoggedIn, "Login Status")
 
-   useEffect(()=>{
+  useEffect(() => {
     if (isLoggedIn) {
       navigate("/home")
     }
-   },[isLoggedIn])
+  }, [isLoggedIn])
 
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    dispatch(login({ username, password }));
+    setLoading(true);
+    setIsError(false);
+    try {
+      dispatch(loginStart());
+      const res = await publicRequest.post("/auth/login", { username, password });
+      dispatch(loginSucess(res.data));
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setIsError(true);
+      setLoading(false);
+      dispatch(loginFailure());
+    }
   };
 
   const navigate = useNavigate();
@@ -102,12 +118,15 @@ const Login = ({user}) => {
             type="password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button onClick={(e)=>handleClick(e)}>
-            LOGIN
+          {isError && <span style={{
+            color: "red"
+          }}>Wrong Username or Password!</span>}
+          <Button onClick={(e) => handleClick(e)}>
+            {loading ? "Loading..." : "LOGIN"}
           </Button>
-       
+
           <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-          <Link onClick={()=>navigate("/register")}>CREATE A NEW ACCOUNT</Link>
+          <Link onClick={() => navigate("/register")}>CREATE A NEW ACCOUNT</Link>
         </Form>
       </Wrapper>
     </Container>
